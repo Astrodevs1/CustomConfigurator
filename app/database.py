@@ -30,7 +30,7 @@ class DatabaseManager:
         print(cursor.fetchall())
 
     @staticmethod
-    def insert_user(connection, name, email):
+    def push_user(connection, name, email):
         """
         Insert a new user into 'users' table.
 
@@ -44,7 +44,7 @@ class DatabaseManager:
         connection.commit()
 
     @staticmethod
-    def get_users(connection):
+    def pull_user(connection):
         """
         Retrieve all users from the 'users' table.
 
@@ -64,15 +64,13 @@ class DatabaseManager:
         connection = DatabaseManager.create_connection(database_name)
         DatabaseManager.create_table(connection)
 
-        DatabaseManager.insert_user(connection, 'John Doe', 'john@example.com')
-        DatabaseManager.insert_user(connection, 'Jane Smith', 'jane@example.com')
+        DatabaseManager.push_user(connection, 'John Doe', 'john@example.com')
+        DatabaseManager.push_user(connection, 'Jane Smith', 'jane@example.com')
 
-        # Retrieve and print all users
-        users = DatabaseManager.get_users(connection)
+        users = DatabaseManager.pull_user(connection)
         for user in users:
             print(user)
 
-        # Close the connection
         connection.close()
 
 if __name__ == "__main__":
