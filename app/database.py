@@ -9,12 +9,6 @@ class DatabaseManager:
 
     @staticmethod
     def create_user_table(connection):
-        """
-        Create 'users' table.
-
-        Args:
-            connection (sqlite3.Connection): Connection object.
-        """
         cursor = connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -31,7 +25,7 @@ class DatabaseManager:
 
     @staticmethod
     def create_vehicles_table(connection):
-        
+
         cursor = connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS vehicles (
@@ -47,32 +41,27 @@ class DatabaseManager:
         # Table schema output (debug)
         cursor.execute("PRAGMA table_info(vehicles)")
         print(cursor.fetchall())
-        
+
+    @staticmethod
+    def push_vehicle(connection, year, make, model):
+        cursor = connection.cursor()
+        cursor.execute('INSERT INTO vehicles (year, make, model) VALUES (?, ?, ?)', (year, make, model))
+        connection.commit()  
+
+    @staticmethod
+    def pull_vehicle(connection, year, make, model):
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM vehicles')
+        return cursor.fetchall()
+
     @staticmethod
     def push_user(connection, name, email):
-        """
-        Insert a new user into 'users' table.
-
-        Args:
-            connection (sqlite3.Connection): Connection object.
-            name (str): The name of the user.
-            email (str): The email address of the user.
-        """
         cursor = connection.cursor()
         cursor.execute('INSERT INTO users (name, email) VALUES (?, ?)', (name, email))
         connection.commit()
 
     @staticmethod
     def pull_user(connection):
-        """
-        Retrieve all users from the 'users' table.
-
-        Args:
-            connection (sqlite3.Connection): The database connection object.
-
-        Returns:
-            list: A list of tuples representing users.
-        """
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM users')
         return cursor.fetchall()
@@ -83,6 +72,7 @@ class DatabaseManager:
         connection = DatabaseManager.create_connection(database_name)
         DatabaseManager.create_table(connection)
 
+        #TODO: chore(variablesuserinput)
         DatabaseManager.push_user(connection, 'John Doe', 'john@example.com')
         DatabaseManager.push_user(connection, 'Jane Smith', 'jane@example.com')
 
