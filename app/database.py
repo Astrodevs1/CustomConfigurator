@@ -8,7 +8,7 @@ class DatabaseManager:
         return connection
 
     @staticmethod
-    def create_table(connection):
+    def create_user_table(connection):
         """
         Create 'users' table.
 
@@ -29,6 +29,25 @@ class DatabaseManager:
         cursor.execute("PRAGMA table_info(users)")
         print(cursor.fetchall())
 
+    @staticmethod
+    def create_vehicles_table(connection):
+        
+        cursor = connection.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS vehicles (
+                id INTEGER PRIMARY KEY,
+                year INTEGER,
+                make TEXT,
+                model TEXT,
+            )  
+                       
+        ''')
+        connection.commit()
+
+        # Table schema output (debug)
+        cursor.execute("PRAGMA table_info(vehicles)")
+        print(cursor.fetchall())
+        
     @staticmethod
     def push_user(connection, name, email):
         """
