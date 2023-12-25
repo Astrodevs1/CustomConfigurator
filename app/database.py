@@ -1,81 +1,79 @@
 import sqlite3
 
-def create_connection(database_name='database.db'):
-    
-    connection = sqlite3.connect('../db/database.db')
-    return connection
+class DatabaseManager:
 
-def create_table(connection):
-    """
-    Create 'users' table.
-    
-    Args:
+    @staticmethod
+    def create_connection(database_name='database.db'):
+        connection = sqlite3.connect(database_name)
+        return connection
 
-    connection(sqlite3.Connection): Connection object.
-    name (str): Username.
-    email (str): E-mail address.
-    
-    """
-    cursor = connection.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            email TEXT
-        )
-    ''')
-    connection.commit()
+    @staticmethod
+    def create_table(connection):
+        """
+        Create 'users' table.
 
-    # Table schema output (debug)
-    cursor.execute("PRAGMA table_info(users)")
-    print(cursor.fetchall())
+        Args:
+            connection (sqlite3.Connection): Connection object.
+        """
+        cursor = connection.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                email TEXT
+            )
+        ''')
+        connection.commit()
 
-def insert_user(connection, name, email):
-    """
-    Insert a new user into 'users' table.
+        # Table schema output (debug)
+        cursor.execute("PRAGMA table_info(users)")
+        print(cursor.fetchall())
 
-    Args:
-    
-    connection(sqlite3.Connection): Connection object.
-    name (str): The name of the user.
-    age (int): The age of the user.
+    @staticmethod
+    def insert_user(connection, name, email):
+        """
+        Insert a new user into 'users' table.
 
-    """
+        Args:
+            connection (sqlite3.Connection): Connection object.
+            name (str): The name of the user.
+            email (str): The email address of the user.
+        """
+        cursor = connection.cursor()
+        cursor.execute('INSERT INTO users (name, email) VALUES (?, ?)', (name, email))
+        connection.commit()
 
-    cursor = connection.cursor()
-    cursor.execute('INSERT INTO users (name, email) VALUES (?, ?)', (name, email))
-    connection.commit()
+    @staticmethod
+    def get_users(connection):
+        """
+        Retrieve all users from the 'users' table.
 
-def get_users(connection):
-    """
-    Retrieve all users from the 'users' table.
+        Args:
+            connection (sqlite3.Connection): The database connection object.
 
-    Args:
-        connection (sqlite3.Connection): The database connection object.
+        Returns:
+            list: A list of tuples representing users.
+        """
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM users')
+        return cursor.fetchall()
 
-    Returns:
-        list: A list of tuples representing users.
-    """
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM users')
-    return cursor.fetchall()
+    @staticmethod
+    def main():
+        database_name = 'database.db'
+        connection = DatabaseManager.create_connection(database_name)
+        DatabaseManager.create_table(connection)
 
-def main():
+        DatabaseManager.insert_user(connection, 'John Doe', 'john@example.com')
+        DatabaseManager.insert_user(connection, 'Jane Smith', 'jane@example.com')
 
-    database_name = 'database.db'
-    connection = create_connection(database_name)
-    create_table(connection)
+        # Retrieve and print all users
+        users = DatabaseManager.get_users(connection)
+        for user in users:
+            print(user)
 
-    insert_user(connection, 'John Doe', "EMAIL")
-    insert_user(connection, 'Jane Smith', "EMAIL")
-
-    # Retrieve and print all users
-    users = get_users(connection)
-    for user in users:
-        print(user)
-
-    # Close the connection
-    connection.close()
+        # Close the connection
+        connection.close()
 
 if __name__ == "__main__":
-    main()
+    DatabaseManager.main()
