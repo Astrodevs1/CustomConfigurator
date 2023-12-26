@@ -80,11 +80,7 @@ class DatabaseManager:
         database_name = 'database.db'
         connection = DatabaseManager.create_connection(database_name)
         DatabaseManager.create_table(connection)
-
-        #TODO: chore(variablesuserinput)
-        DatabaseManager.push_user(connection, 'John Doe', 'john@example.com')
-        DatabaseManager.push_user(connection, 'Jane Smith', 'jane@example.com')
-
+        
         users = DatabaseManager.pull_user(connection)
         for user in users:
             print(user)
