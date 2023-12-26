@@ -44,6 +44,11 @@ class DatabaseManager:
 
     @staticmethod
     def push_vehicle(connection, year, make, model):
+        
+        year = input("Enter Model Year: ")
+        make = input("Enter Vehicle Make: ")
+        model = input("Enter vehicle Model: ")
+
         cursor = connection.cursor()
         cursor.execute('INSERT INTO vehicles (year, make, model) VALUES (?, ?, ?)', (year, make, model))
         connection.commit()  
