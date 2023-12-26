@@ -61,6 +61,10 @@ class DatabaseManager:
 
     @staticmethod
     def push_user(connection, name, email):
+
+        name = input("Enter Username: ")
+        email = input("Enter Email: ")
+
         cursor = connection.cursor()
         cursor.execute('INSERT INTO users (name, email) VALUES (?, ?)', (name, email))
         connection.commit()
