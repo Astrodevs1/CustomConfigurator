@@ -3,7 +3,7 @@ import sqlite3
 class DatabaseManager:
 
     @staticmethod
-    def create_connection(database_name='database.db'):
+    def create_connection(database_name='../db/database.db'):
         connection = sqlite3.connect(database_name)
         return connection
 
@@ -25,16 +25,14 @@ class DatabaseManager:
 
     @staticmethod
     def create_vehicles_table(connection):
-
         cursor = connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY,
                 year INTEGER,
                 make TEXT,
-                model TEXT,
+                model TEXT
             )  
-                       
         ''')
         connection.commit()
 
@@ -44,18 +42,25 @@ class DatabaseManager:
 
     @staticmethod
     def push_vehicle(connection, year, make, model):
+        year = input("Enter Model Year: ")
+        make = input("Enter Vehicle Make: ")
+        model = input("Enter vehicle Model: ")
+
         cursor = connection.cursor()
         cursor.execute('INSERT INTO vehicles (year, make, model) VALUES (?, ?, ?)', (year, make, model))
         connection.commit()  
 
     @staticmethod
-    def pull_vehicle(connection, year, make, model):
+    def pull_vehicle(connection):
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM vehicles')
         return cursor.fetchall()
 
     @staticmethod
     def push_user(connection, name, email):
+        name = input("Enter Username: ")
+        email = input("Enter Email: ")
+
         cursor = connection.cursor()
         cursor.execute('INSERT INTO users (name, email) VALUES (?, ?)', (name, email))
         connection.commit()
@@ -68,18 +73,19 @@ class DatabaseManager:
 
     @staticmethod
     def main():
-        database_name = 'database.db'
+        database_name = '../db/database.db'
         connection = DatabaseManager.create_connection(database_name)
-        DatabaseManager.create_table(connection)
-
-        #TODO: chore(variablesuserinput)
-        DatabaseManager.push_user(connection, 'John Doe', 'john@example.com')
-        DatabaseManager.push_user(connection, 'Jane Smith', 'jane@example.com')
+        DatabaseManager.create_user_table(connection)
+        DatabaseManager.create_vehicles_table(connection)
 
         users = DatabaseManager.pull_user(connection)
         for user in users:
             print(user)
-
+        
+        vehicles = DatabaseManager.pull_vehicle(connection)
+        for vehicle in vehicles:
+            print(vehicle)
+            
         connection.close()
 
 if __name__ == "__main__":
