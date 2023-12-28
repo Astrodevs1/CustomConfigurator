@@ -9,13 +9,16 @@ def main():
     DatabaseManager.create_vehicles_table(connection)
 
     # Accept user input and push data to the database
-    name = input("Enter Username: ")
-    email = input("Enter Email: ")
+
+    name = ""
+    email = ""
+
     DatabaseManager.push_user(connection, name, email)
 
-    year = input("Enter Model Year: ")
-    make = input("Enter Vehicle Make: ")
-    model = input("Enter vehicle Model: ")
+    year = ""
+    make = ""
+    model = ""
+    
     DatabaseManager.push_vehicle(connection, year, make, model)
 
     # Pull and print data from the database
