@@ -3,7 +3,7 @@ import sqlite3
 class DatabaseManager:
 
     @staticmethod
-    def create_connection(database_name='database.db'):
+    def create_connection(database_name='../db/database.db'):
         connection = sqlite3.connect(database_name)
         return connection
 
@@ -25,16 +25,14 @@ class DatabaseManager:
 
     @staticmethod
     def create_vehicles_table(connection):
-
         cursor = connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY,
                 year INTEGER,
                 make TEXT,
-                model TEXT,
+                model TEXT
             )  
-                       
         ''')
         connection.commit()
 
@@ -44,7 +42,6 @@ class DatabaseManager:
 
     @staticmethod
     def push_vehicle(connection, year, make, model):
-        
         year = input("Enter Model Year: ")
         make = input("Enter Vehicle Make: ")
         model = input("Enter vehicle Model: ")
@@ -54,14 +51,13 @@ class DatabaseManager:
         connection.commit()  
 
     @staticmethod
-    def pull_vehicle(connection, year, make, model):
+    def pull_vehicle(connection):
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM vehicles')
         return cursor.fetchall()
 
     @staticmethod
     def push_user(connection, name, email):
-
         name = input("Enter Username: ")
         email = input("Enter Email: ")
 
@@ -77,7 +73,7 @@ class DatabaseManager:
 
     @staticmethod
     def main():
-        database_name = 'database.db'
+        database_name = '../db/database.db'
         connection = DatabaseManager.create_connection(database_name)
         DatabaseManager.create_user_table(connection)
         DatabaseManager.create_vehicles_table(connection)
