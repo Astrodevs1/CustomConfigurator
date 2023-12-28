@@ -79,12 +79,17 @@ class DatabaseManager:
     def main():
         database_name = 'database.db'
         connection = DatabaseManager.create_connection(database_name)
-        DatabaseManager.create_table(connection)
-        
+        DatabaseManager.create_user_table(connection)
+        DatabaseManager.create_vehicles_table(connection)
+
         users = DatabaseManager.pull_user(connection)
         for user in users:
             print(user)
-
+        
+        vehicles = DatabaseManager.pull_vehicle(connection)
+        for vehicle in vehicles:
+            print(vehicle)
+            
         connection.close()
 
 if __name__ == "__main__":
